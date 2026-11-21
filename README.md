@@ -24,21 +24,20 @@ GLM Tray keeps the Genelec GLM main window in the Windows notification area whil
 
 ## 3. 最新版本下载与说明书 / Latest downloads and guides
 
-1.0.4 Stable 的 Windows 安装包将在发布后列入此表。 / The Windows installer for 1.0.4 Stable will appear here when published.
-
-**1.0.2 · Windows x64 · 2026-11-20**（北京时间 / UTC+8）· 首个 GitHub 正式发布 / First GitHub release. [最新版 Release / Latest release](https://github.com/Ziqing-Gu/GLMTray/releases/latest)
+**1.0.4 Stable · Windows x64 · 2026-11-21**（北京时间 / UTC+8）. [最新版 Release / Latest release](https://github.com/Ziqing-Gu/GLMTray/releases/latest)
 
 | 下载 / Download | 用途 / What to choose |
 | --- | --- |
-| [Windows x64 安装包 / Windows x64 installer](https://github.com/Ziqing-Gu/GLMTray/releases/download/v1.0.2/GLMTray-1.0.2-Windows-x64-Setup.exe) | 在 Windows 10 或 11 上为当前账户安装。安装包未做代码签名。 / Installs for the current user on Windows 10 or 11. The installer is unsigned. |
-| [中文安装与使用说明](https://github.com/Ziqing-Gu/GLMTray/releases/download/v1.0.2/Install-ZH.md) | 安装、便携运行、托盘操作、登录启动和卸载。 |
-| [English installation and user guide](https://github.com/Ziqing-Gu/GLMTray/releases/download/v1.0.2/Install-EN.md) | Installation, portable use, tray controls, sign-in and removal. |
+| [Windows x64 安装包 / Windows x64 installer](https://github.com/Ziqing-Gu/GLMTray/releases/download/v1.0.4/GLMTray-1.0.4-Windows-x64-Setup.exe) | 在 Windows 10 或 11 上为当前账户安装。安装包未做代码签名。 / Installs for the current user on Windows 10 or 11. The installer is unsigned. |
+| [快速上手 TXT / Quick start](https://github.com/Ziqing-Gu/GLMTray/releases/download/v1.0.4/GLMTray-Quick-Start.txt) | 一页读懂用途和日常操作，中英双语。 / A short bilingual guide to everyday use. |
+| [中文安装与使用说明](https://github.com/Ziqing-Gu/GLMTray/releases/download/v1.0.4/Install-ZH.md) | 安装、便携运行、托盘操作、登录启动和卸载。 |
+| [English installation and user guide](https://github.com/Ziqing-Gu/GLMTray/releases/download/v1.0.4/Install-EN.md) | Installation, portable use, tray controls, sign-in and removal. |
 
-便携使用时，可将安装后的 `GLMTray.exe` 复制到可写目录。升级前先退出旧助手；如需登录后启动，从新位置重新启用该选项。macOS 和 Linux 暂无成品。GitHub 自动生成的 “Source code (zip/tar.gz)” 供查看和构建源码，Windows 用户请选择上表的 EXE 安装包。
+从旧版安装包升级时，直接运行新安装包即可。保留向导预选的文件夹会原位更新；点击浏览改选目录会迁移程序并卸载旧安装。安装器保留已启用的登录任务、设置和指向旧程序的开始菜单、桌面及桌面一级文件夹快捷方式。独立便携副本请在升级前手动退出。macOS 和 Linux 暂无成品。GitHub 的 “Source code (zip/tar.gz)” 是源码快照，Windows 安装请选择上表的 EXE。
 
-For portable use, copy the installed `GLMTray.exe` to a writable folder. Exit the previous helper before upgrading and re-enable start at sign-in from the new location if needed. No macOS or Linux build is available. GitHub's “Source code (zip/tar.gz)” archives are for inspecting or building the source. For Windows installation, choose the EXE above.
+Run Setup to upgrade an installed copy. Keep the preselected folder to update in place, or browse to move the program and uninstall the previous copy. Setup carries over an enabled sign-in task, preferences and existing links to the helper in Start, on the desktop and in its immediate subfolders. Exit a separate portable instance before upgrading. No macOS or Linux build is available. GitHub's “Source code (zip/tar.gz)” files contain source snapshots. Choose the EXE above for installation.
 
-如 GLM 与 Cubase 或 Nuendo 在启动时发生冲突，请先启动 GLM。验证使用 GLM 5.2.0；实体 MIDI 控制器全部按键、其他 GLM 版本及常规安装卸载流程尚未覆盖。 / If GLM reports a startup conflict with Cubase or Nuendo, start GLM first. Testing used GLM 5.2.0. It did not cover every physical MIDI control, other GLM versions, or a full registered install/uninstall cycle.
+验证环境为 Windows x64 和 Genelec GLM 5.2.0。若 GLM 与 Cubase 或 Nuendo 在启动时争用设备，请先开 GLM。本次未遍历实体控制器的所有按键，也未验证其他 GLM 版本。 / Testing used Windows x64 and Genelec GLM 5.2.0. If GLM and Cubase or Nuendo compete for a device at startup, open GLM first. Testing did not cover every physical control or other GLM versions.
 
 ## 4. 逐版本更新记录 / Version history
 
