@@ -1,0 +1,16 @@
+﻿GLM 托盘助手 1.0.4  ·  Windows x64
+
+这个小程序能做什么
+用 MIDI 控制器调节监听音量时，可以把 Genelec GLM 留在后台，把任务栏留给音频工作站。音量、静音和校准仍由原版 GLM 处理。请保持 GLM 运行。
+
+怎么用
+1. 运行安装包。升级时，安装向导会选中已安装的位置。直接点“下一步”即可原位升级；也可以浏览并选择新目录。
+2. 启动 GLM 和托盘助手。GLM 主窗口出现约十秒后自动隐藏。打开的设置或错误对话框会等你处理完。
+3. 双击通知区域里的绿色监听音箱图标，可恢复 GLM 窗口。右键图标可设置登录后启动、最小化时隐藏，或退出助手并恢复 GLM。
+4. 平时继续用原来的开始菜单入口或桌面文件夹里的快捷方式。升级不会在桌面根目录重新创建图标。
+
+GLM Tray 1.0.4  ·  Windows x64
+
+Keep the Genelec GLM window out of the taskbar while using your MIDI controller. Leave GLM running for monitor levels, mute and calibration.
+Run Setup to upgrade in the existing folder, or browse to move the installation. Start GLM and the helper. The main window hides after about ten seconds.
+Double-click the green monitor icon in the notification area to restore GLM. Right-click for sign-in, minimize-to-tray and exit options. Continue using your existing Start or desktop-folder shortcut.

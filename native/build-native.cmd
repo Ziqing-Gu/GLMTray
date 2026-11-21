@@ -16,9 +16,13 @@ call "%vsroot%\VC\Auxiliary\Build\vcvars64.bat" >nul
 if errorlevel 1 exit /b 1
 pushd "%outdir%"
 if errorlevel 1 exit /b 1
-rc /nologo /fo GLMTray.res "%src%GLMTray.rc"
+rc /nologo /i "%src%." /fo GLMTray.res "%src%GLMTray.rc"
 if errorlevel 1 exit /b 1
-cl /nologo /std:c++17 /EHsc /O2 /W4 /WX /MT /utf-8 /Fe:GLMTray.exe /Fo:GLMTray.obj "%src%GLMTray.cpp" GLMTray.res /link /SUBSYSTEM:WINDOWS /DYNAMICBASE /NXCOMPAT
+cl /nologo /std:c++17 /EHsc /O2 /W4 /WX /MT /utf-8 /c "%src%logon-task.cpp" /Fo:logon-task.obj
 if errorlevel 1 exit /b 1
-cl /nologo /std:c++17 /EHsc /O2 /W4 /WX /MT /utf-8 /DGLMTRAY_TESTING /Fe:GLMTrayTest.exe /Fo:GLMTrayTest.obj "%src%GLMTray.cpp" GLMTray.res /link /SUBSYSTEM:WINDOWS /DYNAMICBASE /NXCOMPAT
+cl /nologo /std:c++17 /EHsc /O2 /W4 /WX /MT /utf-8 /Fe:GLMTray.exe /Fo:GLMTray.obj "%src%GLMTray.cpp" GLMTray.res logon-task.obj /link /SUBSYSTEM:WINDOWS /DYNAMICBASE /NXCOMPAT
+if errorlevel 1 exit /b 1
+cl /nologo /std:c++17 /EHsc /O2 /W4 /WX /MT /utf-8 /DGLMTRAY_TESTING /c "%src%logon-task.cpp" /Fo:logon-task-test.obj
+if errorlevel 1 exit /b 1
+cl /nologo /std:c++17 /EHsc /O2 /W4 /WX /MT /utf-8 /DGLMTRAY_TESTING /Fe:GLMTrayTest.exe /Fo:GLMTrayTest.obj "%src%GLMTray.cpp" GLMTray.res logon-task-test.obj /link /SUBSYSTEM:WINDOWS /DYNAMICBASE /NXCOMPAT
 exit /b %errorlevel%

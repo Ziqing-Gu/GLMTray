@@ -2,9 +2,9 @@
 
 ## 1. 产品介绍 / About the product
 
-用 MIDI 控制器调节 Genelec 监听系统时，GLM 可以留在 Windows 通知区域。GLM Tray 会在 GLM 主窗口出现约十秒后将它隐藏，让任务栏留给音频工作站。原有 MIDI 映射和音量控制仍由 GLM 处理。双击托盘里的绿色 G 可以打开主窗口，退出助手也会恢复窗口。遇到设置或错误对话框时，助手会等你处理完再隐藏。
+用 MIDI 控制器调节 Genelec 监听系统时，GLM 可以留在 Windows 后台。GLM Tray 会在识别到 GLM 主窗口约十秒后将它隐藏，让任务栏留给音频工作站。原有 MIDI 映射和音量控制仍由 GLM 处理。双击通知区域里的绿色监听音箱图标可以打开主窗口，退出助手也会恢复窗口。遇到设置或错误对话框时，助手会等你处理完再隐藏。
 
-GLM Tray keeps the Genelec GLM main window in the Windows notification area while you work in your DAW. About ten seconds after the window appears, the helper hides it. GLM continues to handle your existing MIDI mappings and monitor levels. Double-click the green G in the tray to bring the window back, or exit the helper to restore it. If GLM opens a settings or error dialog, the helper waits until you finish with it.
+GLM Tray keeps the Genelec GLM main window in the Windows notification area while you work in your DAW. About ten seconds after the window appears, the helper hides it. GLM continues to handle your existing MIDI mappings and monitor levels. Double-click the green monitor icon in the tray to bring the window back, or exit the helper to restore it. If GLM opens a settings or error dialog, the helper waits until you finish with it.
 
 本工具由 Qing Audio 独立提供。Genelec GLM 与监听硬件需另行安装、配置。 / An independent Qing Audio utility, unaffiliated with Genelec. Install and configure Genelec GLM and your monitoring hardware separately.
 
@@ -24,6 +24,8 @@ GLM Tray keeps the Genelec GLM main window in the Windows notification area whil
 
 ## 3. 最新版本下载与说明书 / Latest downloads and guides
 
+1.0.4 Stable 的 Windows 安装包将在发布后列入此表。 / The Windows installer for 1.0.4 Stable will appear here when published.
+
 **1.0.2 · Windows x64 · 2026-11-20**（北京时间 / UTC+8）· 首个 GitHub 正式发布 / First GitHub release. [最新版 Release / Latest release](https://github.com/Ziqing-Gu/GLMTray/releases/latest)
 
 | 下载 / Download | 用途 / What to choose |
@@ -39,6 +41,18 @@ For portable use, copy the installed `GLMTray.exe` to a writable folder. Exit th
 如 GLM 与 Cubase 或 Nuendo 在启动时发生冲突，请先启动 GLM。验证使用 GLM 5.2.0；实体 MIDI 控制器全部按键、其他 GLM 版本及常规安装卸载流程尚未覆盖。 / If GLM reports a startup conflict with Cubase or Nuendo, start GLM first. Testing used GLM 5.2.0. It did not cover every physical MIDI control, other GLM versions, or a full registered install/uninstall cycle.
 
 ## 4. 逐版本更新记录 / Version history
+
+### 1.0.4 · 2026-11-21 · Stable · 安装与迁移 / Installation and upgrades
+
+- 安装器默认沿用已安装的位置，也可更换目录。换目录时校验新程序，更新已启用的登录任务和现有快捷方式，再通过旧版卸载程序收尾。已运行的助手会恢复，原有设置和用户文件得到保留。新增中英双语快速上手 TXT。
+- Setup reuses the existing folder by default and accepts a new destination. A move verifies the new program, updates its active sign-in task and existing shortcuts, then runs the old uninstaller. A previously running helper resumes. Preferences and user files are preserved. A bilingual plain-text quick start is included.
+- 17 项窗口检查和 18 项安装迁移检查通过。在 GLM 5.2.0 的实际安装上，两处现有快捷方式均能恢复窗口。助手空闲时，120 个约一秒的采样区间均未测得超过全机 CPU 的 0.05%。
+- All 17 window checks and 18 installer checks passed. Both existing shortcuts restored the GLM 5.2.0 window after an in-place upgrade. In one idle run, the helper stayed within 0.05% of whole-machine CPU in all 120 roughly one-second samples.
+
+### 1.0.3 · 2026-11-21 · 登录启动和程序图标 / Sign-in and application icon
+
+- 登录启动改用当前账户的 Windows 计划任务。助手、托盘和安装包共用绿色监听音箱图标。17 项窗口测试通过。在一次真实 GLM 后台测试中，120 个约一秒区间均未测到助手超过全机 CPU 的 0.05%。
+- Moved start at sign-in to a per-user Windows scheduled task and added a green monitor icon to the program, tray and installer. All 17 window checks passed. With GLM hidden, a single 120-interval test measured no one-second sample above 0.05% of whole-machine CPU.
 
 ### 1.0.2 · 2026-11-20 · 便携运行 / Portable use
 

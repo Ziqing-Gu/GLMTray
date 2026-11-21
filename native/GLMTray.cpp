@@ -15,6 +15,7 @@
 #include <filesystem>
 #include <shlobj.h>
 #include <winver.h>
+#include "logon-task.h"
 #pragma comment(lib, "ole32.lib")
 #pragma comment(lib, "uuid.lib")
 #pragma comment(lib, "version.lib")
@@ -26,15 +27,17 @@ namespace fs = std::filesystem;
 #pragma comment(lib, "gdi32.lib")
 #pragma comment(lib, "psapi.lib")
 
-constexpr wchar_t Version[] = L"1.0.2";
+constexpr wchar_t Version[] = L"1.0.4";
 constexpr wchar_t RunKey[] = L"Software\\Microsoft\\Windows\\CurrentVersion\\Run";
 constexpr UINT TrayMessage = WM_APP + 1, WindowEvent = WM_APP + 2;
 constexpr UINT IdShow = 1, IdHide = 2, IdExit = 3, IdStartup = 4, IdMinimize = 5, IdAbout = 6;
 constexpr UINT_PTR AttachTimer = 1;
 #ifdef GLMTRAY_TESTING
+constexpr wchar_t RunValue[] = L"GLMTray.Test";
 constexpr wchar_t ControllerClass[] = L"GLMTray.Test.Controller";
 constexpr UINT StartupDelay = 1500;
 #else
+constexpr wchar_t RunValue[] = L"GLMTray";
 constexpr wchar_t ControllerClass[] = L"GLMTray.Native.Controller";
 constexpr UINT StartupDelay = 10000;
 #endif
@@ -83,7 +86,7 @@ const std::wstring& TargetPath() {
     static const auto path = ResolveTarget();
     return path;
 }
-std::wstring Prefix() {
+std::wstring UserSid() {
     HANDLE token{};
     std::wstring sid;
     if (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token)) {
@@ -98,6 +101,10 @@ std::wstring Prefix() {
         }
         CloseHandle(token);
     }
+    return sid;
+}
+std::wstring Prefix() {
+    const auto sid = UserSid();
     if (sid.empty()) return L"";
 #ifdef GLMTRAY_TESTING
     return L"Local\\GLMTrayTest.CurrentUser." + sid;
@@ -184,73 +191,78 @@ bool CanHide(HWND window) {
 }
 std::wstring StartupValue() {
     wchar_t value[32768]{}; DWORD bytes = sizeof(value);
-    if (RegGetValueW(HKEY_CURRENT_USER, RunKey, L"GLMTray", RRF_RT_REG_SZ, nullptr, value, &bytes) != ERROR_SUCCESS) return L"";
+    if (RegGetValueW(HKEY_CURRENT_USER, RunKey, RunValue, RRF_RT_REG_SZ, nullptr, value, &bytes) != ERROR_SUCCESS) return L"";
     return value;
 }
-std::wstring StartupCommand() { return L"\"" + SelfPath() + L"\" --autostart"; }
-bool SetStartup(bool enable) {
-    const auto old = StartupValue(), expected = StartupCommand();
-    if (!old.empty() && _wcsicmp(old.c_str(), expected.c_str())) {
-        if (!enable) return false;
-        int count{};
-        auto args = CommandLineToArgvW(old.c_str(), &count);
-        const bool shape = args && count == 2 && !wcscmp(args[1], L"--autostart");
-        const fs::path prior = shape ? fs::path(args[0]) : fs::path();
-        if (args) LocalFree(args);
-        if (!prior.is_absolute() || _wcsicmp(prior.filename().c_str(), L"GLMTray.exe")) return false;
-        // Only rebind an installed copy whose version resource identifies this product.
-        // A missing portable copy may be relinked by an explicit enable request.
-        if (GetFileAttributesW(prior.c_str()) != INVALID_FILE_ATTRIBUTES) {
-            DWORD ignored{};
-            const DWORD size = GetFileVersionInfoSizeW(prior.c_str(), &ignored);
-            std::vector<BYTE> info(size);
-            if (!size || !GetFileVersionInfoW(prior.c_str(), 0, size, info.data())) return false;
-            struct Language { WORD language, page; };
-            Language* languages{}; UINT length{};
-            if (!VerQueryValueW(info.data(), L"\\VarFileInfo\\Translation", reinterpret_cast<void**>(&languages), &length)) return false;
-            bool ours = false;
-            for (size_t i = 0; i < length / sizeof(Language); ++i) {
-                wchar_t field[80]{};
-                swprintf_s(field, L"\\StringFileInfo\\%04x%04x\\ProductName", languages[i].language, languages[i].page);
-                wchar_t* product{}; UINT chars{};
-                if (VerQueryValueW(info.data(), field, reinterpret_cast<void**>(&product), &chars) &&
-                    chars && !_wcsicmp(product, L"GLM Tray")) { ours = true; break; }
-            }
-            if (!ours) return false;
-        } else if (GetLastError() != ERROR_FILE_NOT_FOUND && GetLastError() != ERROR_PATH_NOT_FOUND) return false;
-    }
+bool RemoveLegacyStartup() {
+    const auto old = StartupValue();
+    if (old.empty()) return true;
+    int count{};
+    auto args = CommandLineToArgvW(old.c_str(), &count);
+    const bool shape = args && count == 2 && !wcscmp(args[1], L"--autostart");
+    const fs::path prior = shape ? fs::path(args[0]) : fs::path();
+    if (args) LocalFree(args);
+    if (!prior.is_absolute() || _wcsicmp(prior.filename().c_str(), L"GLMTray.exe")) return false;
+    // Only rebind an installed copy whose version resource identifies this product.
+    // A missing portable copy may be relinked by an explicit enable request.
+    if (GetFileAttributesW(prior.c_str()) != INVALID_FILE_ATTRIBUTES) {
+        DWORD ignored{};
+        const DWORD size = GetFileVersionInfoSizeW(prior.c_str(), &ignored);
+        std::vector<BYTE> info(size);
+        if (!size || !GetFileVersionInfoW(prior.c_str(), 0, size, info.data())) return false;
+        struct Language { WORD language, page; };
+        Language* languages{}; UINT length{};
+        if (!VerQueryValueW(info.data(), L"\\VarFileInfo\\Translation", reinterpret_cast<void**>(&languages), &length)) return false;
+        bool ours = false;
+        for (size_t i = 0; i < length / sizeof(Language); ++i) {
+            wchar_t field[80]{};
+            swprintf_s(field, L"\\StringFileInfo\\%04x%04x\\ProductName", languages[i].language, languages[i].page);
+            wchar_t* product{}; UINT chars{};
+            if (VerQueryValueW(info.data(), field, reinterpret_cast<void**>(&product), &chars) &&
+                chars && !_wcsicmp(product, L"GLM Tray")) { ours = true; break; }
+        }
+        if (!ours) return false;
+    } else if (GetLastError() != ERROR_FILE_NOT_FOUND && GetLastError() != ERROR_PATH_NOT_FOUND) return false;
     HKEY key{};
-    if (RegCreateKeyExW(HKEY_CURRENT_USER, RunKey, 0, nullptr, 0, KEY_SET_VALUE, nullptr, &key, nullptr) != ERROR_SUCCESS) return false;
-    LSTATUS result = enable ? RegSetValueExW(key, L"GLMTray", 0, REG_SZ,
-        reinterpret_cast<const BYTE*>(expected.c_str()), static_cast<DWORD>((expected.size() + 1) * sizeof(wchar_t))) : RegDeleteValueW(key, L"GLMTray");
-    RegCloseKey(key); return result == ERROR_SUCCESS || (!enable && result == ERROR_FILE_NOT_FOUND);
+    if (RegOpenKeyExW(HKEY_CURRENT_USER, RunKey, 0, KEY_SET_VALUE, &key) != ERROR_SUCCESS) return false;
+    const bool unchanged = old == StartupValue();
+    const LSTATUS result = unchanged ? RegDeleteValueW(key, RunValue) : ERROR_RETRY;
+    RegCloseKey(key);
+    return result == ERROR_SUCCESS || result == ERROR_FILE_NOT_FOUND;
 }
-HICON MakeIcon() {
-    BITMAPINFO info{}; info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    info.bmiHeader.biWidth = 32; info.bmiHeader.biHeight = -32;
-    info.bmiHeader.biPlanes = 1; info.bmiHeader.biBitCount = 32; info.bmiHeader.biCompression = BI_RGB;
-    void* bits{}; HDC dc = CreateCompatibleDC(nullptr);
-    if (!dc) return nullptr;
-    HBITMAP color = CreateDIBSection(dc, &info, DIB_RGB_COLORS, &bits, nullptr, 0);
-    if (!color || !bits) { if (color) DeleteObject(color); DeleteDC(dc); return nullptr; }
-    HGDIOBJ previous = SelectObject(dc, color);
-    memset(bits, 0, 32 * 32 * 4);
-    HBRUSH brush = CreateSolidBrush(RGB(0, 136, 100));
-    auto oldBrush = SelectObject(dc, brush); auto oldPen = SelectObject(dc, GetStockObject(NULL_PEN));
-    Ellipse(dc, 1, 1, 31, 31);
-    HFONT font = CreateFontW(-23, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
-        OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH, L"Segoe UI");
-    auto oldFont = SelectObject(dc, font); SetTextColor(dc, RGB(255, 255, 255)); SetBkMode(dc, TRANSPARENT);
-    RECT rect{0, 0, 32, 32}; DrawTextW(dc, L"G", 1, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-    GdiFlush();
-    auto pixels = static_cast<DWORD*>(bits);
-    for (int i = 0; i < 32 * 32; ++i) if (pixels[i] & 0xFFFFFF) pixels[i] |= 0xFF000000;
-    SelectObject(dc, oldFont); SelectObject(dc, oldBrush); SelectObject(dc, oldPen); SelectObject(dc, previous);
-    BYTE maskBits[128]{}; HBITMAP mask = CreateBitmap(32, 32, 1, 1, maskBits);
-    ICONINFO iconInfo{}; iconInfo.fIcon = TRUE; iconInfo.hbmColor = color; iconInfo.hbmMask = mask;
-    HICON icon = CreateIconIndirect(&iconInfo);
-    DeleteObject(mask); DeleteObject(color); DeleteObject(font); DeleteObject(brush); DeleteDC(dc);
-    return icon;
+bool StartupEnabled() { return LogonTask(LogonAction::Query, UserSid(), SelfPath()); }
+// Setup queries a particular installed copy. A portable helper in the same
+// session must not be stopped when another directory is being upgraded.
+int InstalledState(const wchar_t* executable, bool stop) {
+    if (!fs::path(executable).is_absolute()) return 8;
+    HWND window = FindWindowW(ControllerClass, L"GLM Tray Controller");
+    DWORD pid{};
+    GetWindowThreadProcessId(window, &pid);
+    int state = 0;
+    if (pid) {
+        HANDLE process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE, FALSE, pid);
+        if (!process) return 8;
+        wchar_t path[32768]{};
+        DWORD length = ARRAYSIZE(path);
+        bool queried = QueryFullProcessImageNameW(process, 0, path, &length) != FALSE;
+        if (queried && !_wcsicmp(path, executable)) {
+            state = 1;
+            if (stop && (!PostMessageW(window, WM_CLOSE, 0, 0) ||
+                         WaitForSingleObject(process, 10000) != WAIT_OBJECT_0)) state = 8;
+        }
+        CloseHandle(process);
+        if (!queried) return 8;
+    }
+    if (stop) return state == 8 ? 8 : 0;
+    const auto legacy = StartupValue();
+    const auto expected = L"\"" + std::wstring(executable) + L"\" --autostart";
+    if (LogonTask(LogonAction::Query, UserSid(), executable) || !_wcsicmp(legacy.c_str(), expected.c_str()))
+        state |= 2;
+    return state;
+}
+bool SetStartup(bool enable) {
+    if (!LogonTask(enable ? LogonAction::Enable : LogonAction::Disable, UserSid(), SelfPath())) return false;
+    return !enable || RemoveLegacyStartup();
 }
 
 void CALLBACK DiscoveryEvent(HWINEVENTHOOK, DWORD, HWND, LONG, LONG, DWORD, DWORD);
@@ -287,7 +299,7 @@ struct App {
             GetWindowThreadProcessId(target, &pid) && pid == targetPid;
     }
     void UpdateTray(bool add = false) {
-        std::wstring tip = L"GLM 托盘助手 1.0.2 · ";
+        std::wstring tip = L"GLM 托盘助手 1.0.4 · ";
         tip += !target ? L"等待 GLM" : IsWindowVisible(target) ? L"界面已显示" : L"已收进托盘";
         if (!add && tip == lastTip) return;
         NOTIFYICONDATAW data{}; data.cbSize = sizeof(data); data.hWnd = controller; data.uID = 1;
@@ -351,9 +363,9 @@ struct App {
         AppendMenuW(menu, MF_STRING, IdHide, L"隐藏到托盘");
         AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
         AppendMenuW(menu, MF_STRING | (hideOnMinimize ? MF_CHECKED : 0), IdMinimize, L"最小化时收进托盘");
-        AppendMenuW(menu, MF_STRING | (StartupValue() == StartupCommand() ? MF_CHECKED : 0), IdStartup, L"登录 Windows 后启动助手");
+        AppendMenuW(menu, MF_STRING | (StartupEnabled() ? MF_CHECKED : 0), IdStartup, L"登录 Windows 后启动助手");
         AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
-        AppendMenuW(menu, MF_STRING, IdAbout, L"关于 GLM 托盘助手 1.0.2");
+        AppendMenuW(menu, MF_STRING, IdAbout, L"关于 GLM 托盘助手 1.0.4");
         AppendMenuW(menu, MF_STRING, IdExit, L"退出助手并恢复 GLM");
         POINT point{}; GetCursorPos(&point); SetForegroundWindow(controller);
         UINT command = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_RIGHTBUTTON, point.x, point.y, 0, controller, nullptr);
@@ -365,13 +377,13 @@ struct App {
         else if (command == IdHide) Hide(true);
         else if (command == IdExit) quitting = true;
         else if (command == IdStartup) {
-            if (!SetStartup(StartupValue() != StartupCommand())) Balloon(L"启动项更新失败，原设置已保留。");
+            if (!SetStartup(!StartupEnabled())) Balloon(L"登录任务或旧启动项未能完成更新，请检查 Windows 任务计划程序。");
         } else if (command == IdMinimize) {
             if (WritePrivateProfileStringW(L"GLMTray", L"HideOnMinimize", hideOnMinimize ? L"0" : L"1", SettingsPath().c_str()))
                 hideOnMinimize = !hideOnMinimize;
             else Balloon(L"此目录无法保存设置。请将助手放在可以写入的目录。");
         } else if (command == IdAbout) MessageBoxW(controller,
-            L"GLM 托盘助手 1.0.2\n\n双击托盘图标恢复 GLM，最小化时自动收起。\n退出助手会恢复 GLM 窗口。\n\n原生事件驱动，无后台定时轮询。", L"GLM 托盘助手", MB_OK);
+            L"GLM 托盘助手 1.0.4\n\n双击托盘图标恢复 GLM，最小化时自动收起。\n退出助手会恢复 GLM 窗口。\n\n原生事件驱动，无后台定时轮询。", L"GLM 托盘助手", MB_OK);
     }
     void OnEvent(DWORD event, HWND window) {
         if (!target) return;
@@ -461,7 +473,7 @@ bool WriteInspect(const wchar_t* output) {
     HWND window = FindMain(); DWORD pid{}; GetWindowThreadProcessId(window, &pid);
     FILE* file{};
     if (_wfopen_s(&file, output, L"w, ccs=UTF-8")) return false;
-    fwprintf(file, L"{\"version\":\"1.0.2\",\"hwnd\":%llu,\"pid\":%lu,\"visible\":%s,\"minimized\":%s,\"enabled\":%s}\n",
+    fwprintf(file, L"{\"version\":\"1.0.4\",\"hwnd\":%llu,\"pid\":%lu,\"visible\":%s,\"minimized\":%s,\"enabled\":%s}\n",
         static_cast<unsigned long long>(reinterpret_cast<UINT_PTR>(window)), pid,
         IsWindowVisible(window) ? L"true" : L"false", IsIconic(window) ? L"true" : L"false", IsWindowEnabled(window) ? L"true" : L"false");
     fclose(file); return true;
@@ -506,6 +518,10 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR, int) {
     if (command == L"--fixture") { LocalFree(argv); return Fixture(instance); }
 #endif
     if (command == L"--inspect" && argc == 3) { bool ok = WriteInspect(argv[2]); LocalFree(argv); return ok ? 0 : 1; }
+    if (argc == 3 && (command == L"--setup-state" || command == L"--setup-stop")) {
+        const int result = InstalledState(argv[2], command == L"--setup-stop");
+        LocalFree(argv); return result;
+    }
     LocalFree(argv);
     if (command == L"--enable-startup") return SetStartup(true) ? 0 : 1;
     if (command == L"--disable-startup") return SetStartup(false) ? 0 : 1;
@@ -533,7 +549,8 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR, int) {
             0, 0, 0, 0, nullptr, nullptr, instance, nullptr);
         if (!state.controller) throw std::runtime_error("Controller window failed");
         state.taskbarCreated = RegisterWindowMessageW(L"TaskbarCreated");
-        state.icon = MakeIcon(); state.UpdateTray(true); state.WatchShell(true);
+        state.icon = static_cast<HICON>(LoadImageW(instance, MAKEINTRESOURCEW(101), IMAGE_ICON,
+            GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR)); state.UpdateTray(true); state.WatchShell(true);
         if (!state.shellListening || !state.icon) throw std::runtime_error("Tray/discovery setup failed");
         HWND target = FindMain();
         if (target) state.Attach(target);
@@ -544,7 +561,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR, int) {
                 return !app->target;
             }, 0);
         }
-        Log(L"Native 1.0.2 started; no periodic polling");
+        Log(L"Native 1.0.4 started; no periodic polling");
         while (!state.quitting) {
             HANDLE handles[]{state.signals[0], state.signals[1], state.signals[2], state.process};
             DWORD count = state.process ? 4 : 3;
