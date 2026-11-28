@@ -67,8 +67,20 @@ static BOOL LooksLikeGLM(NSBundle *bundle) {
 
 - (void)restoreOwnedHide {
     [self cancelPending];
-    if (_hidTarget && _target.hidden && !_target.terminated) [_target unhide];
+    if (_hidTarget && _target.hidden && !_target.terminated && ![_target unhide]) {
+        // AppKit can decline unhide for a background caller. Activate the existing process only.
+        [self activateTarget];
+    }
     _hidTarget = NO;
+}
+
+- (BOOL)activateTarget {
+    if (!_target || _target.terminated) return NO;
+    if (@available(macOS 14.0, *)) {
+        [NSApp yieldActivationToApplication:_target];
+        return [_target activateWithOptions:NSApplicationActivateAllWindows];
+    }
+    return [_target activateWithOptions:NSApplicationActivateIgnoringOtherApps | NSApplicationActivateAllWindows];
 }
 
 - (void)hideWhenInBackground {
@@ -159,15 +171,16 @@ static BOOL LooksLikeGLM(NSBundle *bundle) {
 - (BOOL)showTarget {
     [self cancelPending];
     if (!_target || _target.terminated) return NO;
-    if (_target.hidden && ![_target unhide]) return NO;
     _hidTarget = NO;
-    // A menu-bar agent can cooperate with the target for activation on Sonoma and later.
-    if (@available(macOS 14.0, *)) {
-        [NSApp yieldActivationToApplication:_target];
-        [_target activateWithOptions:NSApplicationActivateAllWindows];
-    } else {
-        [_target activateWithOptions:NSApplicationActivateIgnoringOtherApps | NSApplicationActivateAllWindows];
-    }
+    BOOL unhidden = !_target.hidden || [_target unhide];
+    if ([self activateTarget] && unhidden) return YES;
+    // A user explicitly asked to show GLM. Launch Services routes a reopen to this installation.
+    NSURL *url = [self validatedLaunchURL];
+    if (!url || ![self matches:_target]) return NO;
+    NSWorkspaceOpenConfiguration *config = NSWorkspaceOpenConfiguration.configuration;
+    config.createsNewApplicationInstance = NO;
+    config.addsToRecentItems = NO;
+    [NSWorkspace.sharedWorkspace openApplicationAtURL:url configuration:config completionHandler:nil];
     return YES;
 }
 
