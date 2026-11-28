@@ -1,0 +1,16 @@
+﻿GLM Tray 1.0.5 · 快速上手 / Quick start
+Qing Audio · 2026-11-28
+
+让原版 Genelec GLM 继续控制监听音量和 MIDI，助手负责隐藏或恢复窗口。
+
+Windows 10/11 x64　打开 Win 文件夹里的 EXE。升级可保留原目录。在时钟旁右击绿色音箱，选「隐藏到托盘」，双击可恢复。需要时勾选「登录 Windows 后启动助手」。
+Mac（macOS 13 及以上）　Apple 芯片和 Intel 都用 Mac 文件夹里的 PKG。从「应用程序」打开 GLM Tray，首次选择原版 Genelec GLM，再点菜单栏音箱隐藏或显示。原版 GLM 保留自己的程序坞图标。Mac 试用包未经过 Apple 公证。
+现场确认　用原来的监听音量，在窗口显示与隐藏时分别用 MIDI 静音、恢复一次。
+详细步骤见同目录的 GLM Tray 1.0.5 安装说明（中文）.txt。
+
+Leave Genelec GLM running for monitor level and MIDI. The helper manages its window.
+
+Windows 10/11 x64   Run the EXE in Win. Keep the previous folder to upgrade in place. Right-click the green tray speaker to hide GLM or set sign-in. Double-click to show GLM.
+Mac (macOS 13+)   Apple silicon and Intel use the same PKG in Mac. Open GLM Tray from Applications, select the original Genelec GLM app, then use the menu-bar speaker to hide or show GLM. Genelec GLM keeps its Dock icon. The Mac trial has not been notarized by Apple.
+Hardware check   At your existing listening level, mute and restore from the MIDI controller both with GLM visible and with its window hidden.
+Full instructions are in GLM Tray 1.0.5 Installation Guide (English).txt in this folder.

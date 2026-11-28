@@ -30,6 +30,8 @@ Version 1.0.5 adds a native macOS menu bar helper for Apple silicon and Intel on
 
 本分支的 1.0.5 正在进行跨平台试用。下表列出当前已公开的正式安装包。 / Version 1.0.5 is being tested on this branch. The table links to the current published release.
 
+1.0.5 试用包的完整安装步骤、安装包校验和排错方法见随包的两份 TXT。 / For setup, installer verification and troubleshooting for the 1.0.5 trial, see the two guides supplied with the package. [中文安装说明](docs/delivery/1.0.5/GLM%20Tray%201.0.5%20%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E%EF%BC%88%E4%B8%AD%E6%96%87%EF%BC%89.txt) · [English installation guide](docs/delivery/1.0.5/GLM%20Tray%201.0.5%20Installation%20Guide%20%28English%29.txt)
+
 **1.0.4 Stable · Windows x64 · 2026-11-21**（北京时间 / UTC+8）. [最新版 Release / Latest release](https://github.com/Ziqing-Gu/GLMTray/releases/latest)
 
 | 下载 / Download | 用途 / What to choose |

@@ -1,0 +1,71 @@
+﻿GLM Tray 1.0.5 Installation Guide
+Qing Audio / Ziqing Gu  |  Trial package issued November 28, 2026
+
+GLM Tray manages the Genelec GLM window from the Windows notification area or the Mac menu bar. Genelec GLM continues to handle monitor levels, mute, calibration and MIDI mappings. Install and configure Genelec GLM 5 first and confirm that it can control your monitors.
+
+Choose your installer
+
+Extract GLMTray-1.0.5-Windows-macOS.zip in full. If you already see the Win and Mac folders, choose the file for your computer.
+  Win/GLMTray-1.0.5-Windows-x64-Setup.exe  Installs GLMTray.exe on an x64 PC running Windows 10 or 11. Check System type under Settings → System → About.
+  Mac/GLMTray-1.0.5-macOS-Universal.pkg  Installs GLM Tray.app on macOS 13 or later. Apple menu → About This Mac shows an Apple chip (arm64) or an Intel processor (x86_64). Both use this one Universal PKG.
+
+Each platform has one standalone helper. Use its installer to update the whole helper to 1.0.5. The ZIP also contains this guide, GLM Tray 1.0.5 安装说明（中文）.txt and the bilingual GLMTray-Quick-Start.txt at the top level. The installed copies of Install-ZH.md and Install-EN.md are the short guides included with the installers.
+
+License and corresponding source
+
+The package contains compiled software and documentation. The complete source is available separately. The Qing Audio Non-Commercial Source-Share License 1.0 prohibits commercial use without a separate written license from the relevant rights holders. When distributing the original or a modified version, include the full license and original notices. Supply the complete corresponding source at the same time, free of charge, or give a stable public link to it. Keep the source available for as long as the distributed software is available and for at least three years after the last distribution. Credit the original GLM Tray project, Qing Audio / Ziqing Gu and the original repository. For a modified version, identify the modifier, date and changes, and keep the entire modified work under the same license.
+Public repository  https://github.com/Ziqing-Gu/GLMTray
+Exact source for both installers  https://github.com/Ziqing-Gu/GLMTray/tree/33fb57f8a28daf6c7335b0b3fc9920bd4594218c
+Full license  https://github.com/Ziqing-Gu/GLMTray/blob/33fb57f8a28daf6c7335b0b3fc9920bd4594218c/LICENSE
+
+Windows installation, upgrades and sign-in
+
+1. Genelec GLM can stay open. If you used Setup for the previous helper, run the new installer directly. If you run a separate portable helper, turn off its sign-in option and quit that copy before upgrading.
+2. Double-click the EXE in Win, read the license and review the destination. A first installation defaults to %LOCALAPPDATA%\Programs\GLM Tray. You may browse to another dedicated folder that your Windows account can write to.
+3. On upgrade, Setup selects the existing directory. Keep it to update in place. If you choose a new folder, Setup verifies the new program, moves the active sign-in task and updates matching shortcuts before invoking the old helper's uninstaller. Setup carries over GLMTray.ini if the destination has none. An existing destination INI takes precedence. User-created files remain in the old folder. You can keep using your shortcuts in Start, on the desktop and in its immediate subfolders.
+4. At the end, select “Start GLM Tray” if offered, or open the selected folder in File Explorer and double-click GLMTray.exe. The default executable is %LOCALAPPDATA%\Programs\GLM Tray\GLMTray.exe. Reopening it signals the running helper.
+5. Find the green speaker by the clock, including under the overflow arrow. The Windows tray menu uses Chinese labels. Right-click and choose “隐藏到托盘” (Hide to tray). Double-click the icon to show GLM. “关于 GLM 托盘助手 1.0.5” (About) confirms the version. Enable “登录 Windows 后启动助手” to start the helper at sign-in. In that mode it waits for GLM and hides the main window after about ten seconds, allowing any settings or error dialog to be handled first.
+
+macOS installation, upgrades and login
+
+1. Before upgrading, choose Quit GLM Tray from the menu-bar speaker. If a copy in ~/Applications or another folder used to open at login, remove its old login entry and use the copy in /Applications from now on.
+2. Double-click the PKG in Mac. Choose Continue and Install. Installer may request administrator approval. When it finishes, open Finder → Applications → GLM Tray. The installed path is /Applications/GLM Tray.app.
+3. On first launch, choose the Genelec GLM application you normally use with your monitors. Click the speaker in the menu bar. Its menu shows “GLM Tray 1.0.5” and lets you choose Hide GLM or Show GLM. Automatic hiding starts enabled. It waits for about ten seconds after detecting GLM and until you switch away from it. Manually restoring the window lets you keep working in it. The original GLM app keeps its own Dock icon while running.
+4. Choose Open GLM Tray at login if desired. If approval is requested, use System Settings → General → Login Items (or Login Items & Extensions). You can also add /Applications/GLM Tray.app under Open at Login. The helper waits for Genelec GLM. Choose Open GLM… when you want to launch it manually.
+
+Installer identity and first launch on Mac
+
+The Windows EXE is unsigned. The Mac PKG has no Developer ID Installer signature. The app has an ad hoc signature and has not been notarized by Apple. A downloaded file may therefore trigger a publisher or developer identity warning.
+
+To verify the Windows installer, open PowerShell in the extracted folder. The command should return the hash on the next line. Letter case does not matter.
+  Get-FileHash -Algorithm SHA256 -LiteralPath ".\Win\GLMTray-1.0.5-Windows-x64-Setup.exe"
+  8d5eec07ce190655427f97d9d278833824301ecfe47645bc9d1c758ea0285014
+
+To verify the Mac installer, type shasum -a 256 followed by a space in Terminal, drag the PKG from Finder into Terminal, and press Return. The expected hash is
+  fb0a9ef3ace260003859547f95cb48604925098460f492b8b3440605b1e5ae3a
+
+If the only alert says the developer cannot be verified, first confirm the source and hash. Try opening that file in Finder, then locate the blocked item in System Settings → Privacy & Security. If Open Anyway is available and your local policy allows it, approve that item individually. Stop if the digest differs or macOS reports damage or malware, and obtain a fresh copy from a trusted source. Follow your administrator's policy on a managed Mac. Apple's guide is at https://support.apple.com/en-us/102445
+
+For an installed app still blocked by a download quarantine attribute, quit the helper and check this specific app first.
+  codesign --verify --strict --all-architectures "/Applications/GLM Tray.app"
+  shasum -a 256 "/Applications/GLM Tray.app/Contents/MacOS/GLMTray"
+  xattr -p com.apple.quarantine "/Applications/GLM Tray.app"
+The first command should succeed and the second should return 1e6e0ff09b98e3b91122fda612feb6a11141a40ac354be6869a22f12bc22e62f. If the third command reports that the attribute is absent, skip the next step. Only if the source is trusted, the checks match, the attribute is present and local policy permits it, clear the attribute on this helper and reopen it from Applications.
+  xattr -dr com.apple.quarantine "/Applications/GLM Tray.app"
+Leave the attribute in place if the source is uncertain. Use only the exact helper path shown above. Do not substitute the Applications folder or Genelec GLM.
+
+Check your monitors and troubleshoot
+
+The same PKG was installed on Apple silicon and Intel Macs running macOS 15. An independent test app exercised hiding and restoring windows. The listening check below is for your own Genelec GLM installation, MIDI controller and monitors.
+
+• At your existing listening level, mute and restore from the MIDI controller with GLM visible. Repeat with GLM hidden, then show its window again. This checks background operation on your actual monitoring hardware.
+• Windows tray icon present but GLM is not detected? Finish any open GLM dialog. If GLMv5.exe lives in a custom folder, put the actual full path in GLMTray.ini beside the helper, then quit and reopen the helper. Save the file as UTF-16 LE with a BOM for non-ASCII paths. A typical Genelec installation uses the following path.
+  [GLMTray]
+  GLMPath=C:\Program Files (x86)\Genelec\GLMv5\GLMv5.exe
+• Mac still shows “Waiting for GLM”? Start Genelec GLM. If you moved or upgraded it, choose “Choose Genelec GLM…” in the menu and select your current installation.
+• Two helper entries at login? On Windows keep the sign-in task enabled by the current helper. On Mac keep only the helper entry for /Applications/GLM Tray.app under Open at Login. Genelec GLM manages its own startup separately.
+• If GLM and Cubase or Nuendo compete for MIDI at startup, save the project, quit the affected DAW, start GLM and confirm the controller works before reopening the DAW. The helper runs directly on the desktop. A plug-in rescan is unnecessary.
+
+Uninstall
+
+On Windows, uninstall GLM Tray in Settings → Apps → Installed apps (Apps & features on Windows 10). For a portable copy, disable its sign-in option and quit it first. On Mac, disable the helper's login option, quit it, then move /Applications/GLM Tray.app to the Trash. Keep Genelec GLM, your calibration projects and your controller settings.

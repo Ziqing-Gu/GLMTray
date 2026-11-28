@@ -1,0 +1,71 @@
+﻿GLM Tray 1.0.5 安装说明（中文）
+Qing Audio / Ziqing Gu　｜　试用包发布日期 2026 年 11 月 28 日
+
+GLM Tray 把 Genelec GLM 的窗口收进 Windows 通知区域或交由 Mac 菜单栏管理。音量、静音、校准和 MIDI 映射继续由原版 GLM 处理。请先安装并配置 Genelec GLM 5，确认它能控制你的监听系统。
+
+选择本机的安装包
+
+收到 GLMTray-1.0.5-Windows-macOS.zip 时，先完整解压。如果已经能看到 Win 和 Mac 文件夹，直接选下面的一项即可。
+  Win/GLMTray-1.0.5-Windows-x64-Setup.exe　适用于 Windows 10 或 11 的 x64 电脑，安装 GLMTray.exe。可在「设置 → 系统 → 关于 → 系统类型」确认架构。
+  Mac/GLMTray-1.0.5-macOS-Universal.pkg　适用于 macOS 13 或更新版本，安装 GLM Tray.app。「苹果菜单 → 关于本机」显示 Apple 芯片（arm64）或 Intel 处理器（x86_64）都选这个通用 PKG。
+
+每个平台只有一个独立助手。请用本机对应的安装器整体升级到 1.0.5。总包根目录另有本说明、GLM Tray 1.0.5 Installation Guide (English).txt 和双语 GLMTray-Quick-Start.txt。安装后的 Install-ZH.md、Install-EN.md 是安装器自带的简要说明。
+
+授权与对应源码
+
+本包随附编译成品和文档，完整源码单独公开。软件适用《Qing Audio 非商业源码共享许可证 1.0》。禁止商业使用，除非另获相关权利人的书面授权。转发原版或修改版时，随附完整许可证和原声明，并同时免费提供对应的完整源码或稳定公开链接。源码须在成品可获得期间持续可用，并至少保留至最后一次分发后三年。应注明原项目 GLM Tray、作者 Qing Audio / Ziqing Gu 及原始来源。有修改时还须注明修改者、日期和内容，修改版整体沿用同一许可证。
+公开仓库　https://github.com/Ziqing-Gu/GLMTray
+这两份安装包对应的源码　https://github.com/Ziqing-Gu/GLMTray/tree/33fb57f8a28daf6c7335b0b3fc9920bd4594218c
+完整许可证　https://github.com/Ziqing-Gu/GLMTray/blob/33fb57f8a28daf6c7335b0b3fc9920bd4594218c/LICENSE
+
+Windows 安装、升级与登录启动
+
+1. 原版 GLM 正在运行时可以继续开着。如果旧助手由安装包装入，直接运行新版安装包。如果用的是单独复制的便携助手，请先在它的托盘菜单取消旧副本的登录启动，再退出旧助手。
+2. 双击 Win 文件夹内的 EXE，阅读许可证，在选择安装位置页确认目录。首次安装默认使用 %LOCALAPPDATA%\Programs\GLM Tray。也可浏览到当前账户有写入权限的专用文件夹。
+3. 已装用户会看到原来的目录。保留目录即可原位更新。选择新目录时，安装器先校验新版，迁移已启用的登录任务和已有快捷方式，再调用旧助手的卸载程序。新目录没有 GLMTray.ini 时会继承旧设置。新目录已有 INI 时沿用该文件。旧目录里的自建文件会保留。原来指向助手的开始菜单、桌面或桌面一级文件夹里的快捷方式可以继续使用。
+4. 完成后，若向导显示“Start GLM Tray”，可勾选启动。也可在资源管理器打开所选目录，双击 GLMTray.exe。默认完整路径为 %LOCALAPPDATA%\Programs\GLM Tray\GLMTray.exe。已经运行的助手会响应再次打开。
+5. 在时钟旁找到绿色音箱图标，必要时展开隐藏图标。右键选「隐藏到托盘」，双击图标可恢复 GLM。选「关于 GLM 托盘助手 1.0.5」可核对版本。勾选「登录 Windows 后启动助手」后，助手会在下次登录时等待 GLM，识别主窗口约十秒后自动收起。GLM 的设置或错误对话框会优先留在屏幕上。
+
+macOS 安装、升级与登录启动
+
+1. 更新前，在菜单栏音箱菜单中选「退出 GLM Tray」。若曾把另一份助手放在 ~/Applications 或其他文件夹，先在系统登录项里移除旧助手的入口，之后统一使用 /Applications 里的副本。
+2. 双击 Mac 文件夹内的 PKG，按「继续」「安装」操作。安装器可能要求管理员授权。安装完成后在访达中打开「应用程序 → GLM Tray」，安装路径为 /Applications/GLM Tray.app。
+3. 首次打开会请你选择平时控制监听音箱的 Genelec GLM 应用。选好以后，点菜单栏的音箱图标，菜单会显示“GLM Tray 1.0.5”。选择「隐藏 GLM」或「显示 GLM」即可操作。自动隐藏默认开启，识别到 GLM 满约十秒且你已切到其他应用时才收起。手动显示后可继续操作。原版 GLM 运行时仍会保留自己的程序坞图标。
+4. 需要登录启动时，勾选「登录时打开助手」。如系统要求确认，请打开「系统设置 → 通用 → 登录项」（部分版本称「登录项与扩展」）。也可以在「登录时打开」手动添加 /Applications/GLM Tray.app。助手等候原版 GLM。若要手动启动原版，可选「打开 GLM…」。
+
+安装包来源与 Mac 首次打开
+
+Windows EXE 未签名。macOS PKG 未使用 Developer ID Installer 签名，App 使用临时签名（ad hoc），未经过 Apple 公证。因此从网上收到的文件可能出现发布者或开发者身份提示。
+
+核对 Windows 安装包时，在解压目录打开 PowerShell，运行下面的命令。结果应与下一行一致，字母大小写不影响比较。
+  Get-FileHash -Algorithm SHA256 -LiteralPath ".\Win\GLMTray-1.0.5-Windows-x64-Setup.exe"
+  8d5eec07ce190655427f97d9d278833824301ecfe47645bc9d1c758ea0285014
+
+核对 Mac 安装包时，在终端输入 shasum -a 256 和一个空格，把 PKG 从访达拖进终端，回车。结果应为
+  fb0a9ef3ace260003859547f95cb48604925098460f492b8b3440605b1e5ae3a
+
+如果 macOS 仅提示无法验证开发者，且来源可信、哈希相符，先在访达尝试打开该文件，再到「系统设置 → 隐私与安全性」找到刚才被阻止的项目。系统提供「仍要打开」时，可按本机策略单独批准该项目。若哈希不符、系统报告损坏或恶意软件，请停止安装并重新取得可信副本。如果是单位管理的 Mac，请遵从管理员的设置。Apple 的说明见 https://support.apple.com/zh-cn/102445
+
+如果 PKG 已成功安装，只有安装后的助手仍被下载隔离标记阻挡，可先退出助手，再用下列命令核对这一个 App。
+  codesign --verify --strict --all-architectures "/Applications/GLM Tray.app"
+  shasum -a 256 "/Applications/GLM Tray.app/Contents/MacOS/GLMTray"
+  xattr -p com.apple.quarantine "/Applications/GLM Tray.app"
+第一条应成功，第二条应得到 1e6e0ff09b98e3b91122fda612feb6a11141a40ac354be6869a22f12bc22e62f。若第三条显示没有该属性，跳过下一步。仅在来源已核实、以上校验一致、确有该属性且本机策略允许时，可对这个助手清除隔离标记，再从「应用程序」打开它。
+  xattr -dr com.apple.quarantine "/Applications/GLM Tray.app"
+来源不确定时请保留隔离标记。命令的目标仅限上述助手，不要把路径改为整个「应用程序」文件夹或原版 Genelec GLM。
+
+安装后的监听检查与常见问题
+
+同一个 PKG 已在 Apple 芯片和 Intel 的 macOS 15 上实际安装，并用独立测试应用验证隐藏和恢复窗口。下列监听检查用于确认你自己的原版 GLM、MIDI 控制器和音箱。
+
+• 保持现有监听音量。先在原版 GLM 窗口可见时用 MIDI 控制器静音并恢复，再隐藏窗口重复一次，最后从托盘或菜单栏调回 GLM。两个状态都能操作，说明当前监听系统在后台可用。此项需要实体设备现场确认。
+• 如果 Windows 托盘已有图标却找不到 GLM，先处理原版 GLM 的弹窗。如果 GLMv5.exe 装在自定义位置，可在助手旁的 GLMTray.ini 中按下面格式写入实际完整路径，再退出并重开助手。路径含中文时用带 BOM 的 UTF-16 LE 保存。下例使用常见的原版安装路径。
+  [GLMTray]
+  GLMPath=C:\Program Files (x86)\Genelec\GLMv5\GLMv5.exe
+• 如果 Mac 菜单一直显示「正在等待 GLM 启动」，先启动原版。若移动或升级过原版，在菜单中重新选「选择 Genelec GLM…」，指向当前实际使用的应用。
+• 如果再次登录出现两个助手入口，Windows 只保留由当前助手启用的登录任务。Mac 在「登录时打开」中只保留 /Applications/GLM Tray.app 的助手入口。原版 GLM 自己的启动项另行管理。
+• 如果 GLM 与 Cubase 或 Nuendo 在启动时争用 MIDI 设备，先保存工程并退出相关宿主，启动 GLM 并确认控制器可用，再打开宿主。这个助手在系统桌面运行，无需在宿主中扫描插件。
+
+卸载
+
+Windows 在「设置 → 应用 → 已安装的应用」（Windows 10 为「应用和功能」）中卸载 GLM Tray。若使用便携副本，先在该副本的菜单中关闭登录启动再退出。Mac 先关闭助手的登录启动并退出它，再将 /Applications/GLM Tray.app 移到废纸篓。原版 Genelec GLM、校准工程和控制器设置可继续保留。
