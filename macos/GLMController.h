@@ -9,6 +9,6 @@
 - (BOOL)selectApplication:(NSURL *)url;
 - (NSURL *)validatedLaunchURL;
 - (BOOL)showTarget;
-- (BOOL)hideTarget;
+- (void)hideTargetWithCompletion:(void (^)(BOOL hidden))completion;
 - (void)stop;
 @end

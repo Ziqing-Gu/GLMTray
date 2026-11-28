@@ -31,6 +31,7 @@ static BOOL LooksLikeGLM(NSBundle *bundle) {
     NSTimer *_timer;
     BOOL _waitingForSwitch;
     BOOL _hidTarget;
+    NSUInteger _visibilityRequest;
 }
 @synthesize selectedURL = _selectedURL, target = _target;
 
@@ -67,6 +68,7 @@ static BOOL LooksLikeGLM(NSBundle *bundle) {
 
 - (void)restoreOwnedHide {
     [self cancelPending];
+    _visibilityRequest++;
     if (_hidTarget && _target.hidden && !_target.terminated && ![_target unhide]) {
         // AppKit can decline unhide for a background caller. Activate the existing process only.
         [self activateTarget];
@@ -87,7 +89,7 @@ static BOOL LooksLikeGLM(NSBundle *bundle) {
     if (!_waitingForSwitch || !_target || _target.terminated) return;
     if (_target.active || [NSWorkspace.sharedWorkspace.frontmostApplication isEqual:_target]) return;
     _waitingForSwitch = NO;
-    [self hideTarget];
+    [self hideTargetWithCompletion:nil];
 }
 
 - (void)timerFired:(NSTimer *)sender {
@@ -156,20 +158,37 @@ static BOOL LooksLikeGLM(NSBundle *bundle) {
 - (void)unhidden:(NSNotification *)note {
     if (![_target isEqual:note.userInfo[NSWorkspaceApplicationKey]]) return;
     [self cancelPending];
+    _visibilityRequest++;
     _hidTarget = NO;
 }
 
-- (BOOL)hideTarget {
+- (void)hideTargetWithCompletion:(void (^)(BOOL))completion {
     [self cancelPending];
-    if (!_target || _target.terminated) return NO;
-    if (_target.hidden) return YES;
-    if (![_target hide]) return NO;
+    NSRunningApplication *app = _target;
+    if (!app || app.terminated || app.hidden) {
+        if (completion) completion(app && !app.terminated && app.hidden);
+        return;
+    }
+    NSUInteger request = ++_visibilityRequest;
     _hidTarget = YES;
-    return YES;
+    [app hide];
+    // Workspace visibility is a run-loop snapshot. Confirm the transition after AppKit delivers it.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 400 * NSEC_PER_MSEC), dispatch_get_main_queue(), ^{
+        if (request != self->_visibilityRequest || ![app isEqual:self->_target] || app.terminated) return;
+        if (app.hidden) { if (completion) completion(YES); return; }
+        if (!completion && app.active) { self->_hidTarget = NO; return; }
+        [app hide];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 600 * NSEC_PER_MSEC), dispatch_get_main_queue(), ^{
+            if (request != self->_visibilityRequest || ![app isEqual:self->_target] || app.terminated) return;
+            self->_hidTarget = app.hidden;
+            if (completion) completion(app.hidden);
+        });
+    });
 }
 
 - (BOOL)showTarget {
     [self cancelPending];
+    _visibilityRequest++;
     if (!_target || _target.terminated) return NO;
     _hidTarget = NO;
     BOOL unhidden = !_target.hidden || [_target unhide];

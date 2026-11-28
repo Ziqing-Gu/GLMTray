@@ -125,8 +125,10 @@ static void Message(NSString *title, NSString *details) {
 }
 
 - (void)hide:(id)sender {
-    if (![_glm hideTarget]) Message(L(@"Could not hide GLM", @"无法隐藏 GLM"),
-        L(@"Finish any open dialog in GLM and try again.", @"请先处理 GLM 中的对话框，再试一次。"));
+    [_glm hideTargetWithCompletion:^(BOOL hidden) {
+        if (!hidden) Message(L(@"Could not hide GLM", @"无法隐藏 GLM"),
+            L(@"Finish any open dialog in GLM and try again.", @"请先处理 GLM 中的对话框，再试一次。"));
+    }];
 }
 
 - (void)toggleAutomatic:(id)sender { _glm.automaticallyHide = !_glm.automaticallyHide; }

@@ -87,7 +87,12 @@ int main(int argc, const char **argv) {
         Check([c showTarget] && Wait(6, ^BOOL{ return !a.hidden; }), @"Show restores the running GLM process");
         Spin(1.1);
         Check(!a.hidden, @"Manual show cancels the pending automatic hide");
-        Check([c hideTarget] && Wait(5, ^BOOL{ return a.hidden; }), @"Manual hide keeps the target alive");
+        __block BOOL hideConfirmed = NO;
+        [c hideTargetWithCompletion:^(BOOL hidden) { hideConfirmed = hidden; }];
+        BOOL hid = Wait(5, ^BOOL{ return a.hidden && hideConfirmed; });
+        if (!hid) NSLog(@"Hide state: selected=%d observed=%d hidden=%d active=%d confirmed=%d",
+                        c.target.processIdentifier, a.processIdentifier, a.hidden, a.active, hideConfirmed);
+        Check(hid && !a.terminated, @"Manual hide keeps the target alive");
         [c stop];
         Check(Wait(5, ^BOOL{ return !a.hidden && !a.terminated; }), @"Stopping the controller restores only its own hide");
         [a hide]; Check(Wait(5, ^BOOL{ return a.hidden; }), @"User hides GLM independently");
