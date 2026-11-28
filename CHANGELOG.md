@@ -1,7 +1,9 @@
 # 版本记录 / Changelog
 
-### 1.0.5 · 2026-11-28 · macOS 菜单栏助手 / macOS menu bar helper
+### 1.0.5 · 2026-11-28 · Stable · macOS 菜单栏助手 / macOS menu bar helper
 
+- 已交付的 1.0.5 Windows 和 macOS 安装包已确认为稳定版。Windows 可回滚到上一稳定版 1.0.4。1.0.5 是首个 macOS 稳定版。
+- The existing 1.0.5 installers for Windows and macOS were designated Stable. Windows users can roll back to the previous stable version, 1.0.4. This is the first stable version of the Mac helper.
 - 新增 macOS 13 及以上版本的菜单栏助手和通用 PKG，同时支持 Apple 芯片和 Intel。首次选定原版 GLM 后，可以隐藏、恢复窗口或选择登录启动。自动隐藏会等到 GLM 离开前台；原版程序的 Dock 图标保留。Windows 使用同版本安装包和双语说明，继续支持原位升级及快捷方式迁移。
 - Added a menu bar helper and Universal PKG for macOS 13 or later on Apple silicon and Intel. Select the installed Genelec GLM app once to hide or show it and optionally start the helper at login. Automatic hiding waits for GLM to leave the foreground. The original app keeps its Dock icon. Windows ships at the same version with the existing upgrade and shortcut migration behavior.
 

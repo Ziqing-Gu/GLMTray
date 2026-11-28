@@ -28,11 +28,13 @@ Version 1.0.5 adds a native macOS menu bar helper for Apple silicon and Intel on
 
 ## 3. 最新版本下载与说明书 / Latest downloads and guides
 
-本分支的 1.0.5 正在进行跨平台试用。下表列出当前已公开的正式安装包。 / Version 1.0.5 is being tested on this branch. The table links to the current published release.
+**GLM Tray 1.0.5 Stable · 2026-11-28**
 
-1.0.5 试用包的完整安装步骤、安装包校验和排错方法见随包的两份 TXT。 / For setup, installer verification and troubleshooting for the 1.0.5 trial, see the two guides supplied with the package. [中文安装说明](docs/delivery/1.0.5/GLM%20Tray%201.0.5%20%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E%EF%BC%88%E4%B8%AD%E6%96%87%EF%BC%89.txt) · [English installation guide](docs/delivery/1.0.5/GLM%20Tray%201.0.5%20Installation%20Guide%20%28English%29.txt)
+当前稳定版支持 Windows 10/11 x64 和 macOS 13 及以上。Apple 芯片和 Intel 使用同一个 PKG。 / The current stable version supports Windows 10/11 x64 and macOS 13 or later. Apple silicon and Intel Macs use the same PKG. [稳定版源码 / Stable source](https://github.com/Ziqing-Gu/GLMTray/tree/v1.0.5) · [安装包对应的源码提交 / Installer build commit](https://github.com/Ziqing-Gu/GLMTray/commit/33fb57f8a28daf6c7335b0b3fc9920bd4594218c)
 
-**1.0.4 Stable · Windows x64 · 2026-11-21**（北京时间 / UTC+8）. [最新版 Release / Latest release](https://github.com/Ziqing-Gu/GLMTray/releases/latest)
+1.0.5 的两份随包说明涵盖安装、旧版迁移、登录启动和排错。 / The 1.0.5 guides cover installation, upgrades, opening at login and troubleshooting. [中文安装说明](docs/delivery/1.0.5/GLM%20Tray%201.0.5%20%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E%EF%BC%88%E4%B8%AD%E6%96%87%EF%BC%89.txt) · [English installation guide](docs/delivery/1.0.5/GLM%20Tray%201.0.5%20Installation%20Guide%20%28English%29.txt)
+
+**GitHub Releases 当前提供的安装包 / Currently published installer · 1.0.4 · Windows x64**. [正式下载页 / Published downloads](https://github.com/Ziqing-Gu/GLMTray/releases/latest)
 
 | 下载 / Download | 用途 / What to choose |
 | --- | --- |
@@ -49,8 +51,10 @@ Run Setup to upgrade an installed copy. Keep the preselected folder to update in
 
 ## 4. 逐版本更新记录 / Version history
 
-### 1.0.5 · 2026-11-28 · macOS 菜单栏助手 / macOS menu bar helper
+### 1.0.5 · 2026-11-28 · Stable · macOS 菜单栏助手 / macOS menu bar helper
 
+- 已交付的 1.0.5 Windows 和 macOS 安装包已确认为稳定版。Windows 可回滚到上一稳定版 1.0.4。1.0.5 是首个 macOS 稳定版。
+- The existing 1.0.5 installers for Windows and macOS were designated Stable. Windows users can roll back to the previous stable version, 1.0.4. This is the first stable version of the Mac helper.
 - 新增 macOS 13 及以上版本的菜单栏助手和通用 PKG，同时支持 Apple 芯片和 Intel。首次选定原版 GLM 后，可以隐藏、恢复窗口或选择登录启动。自动隐藏会等到 GLM 离开前台；原版程序的 Dock 图标保留。Windows 使用同版本安装包和双语说明，继续支持原位升级及快捷方式迁移。
 - Added a menu bar helper and Universal PKG for macOS 13 or later on Apple silicon and Intel. Select the installed Genelec GLM app once to hide or show it and optionally start the helper at login. Automatic hiding waits for GLM to leave the foreground. The original app keeps its Dock icon. Windows ships at the same version with the existing upgrade and shortcut migration behavior.
 
