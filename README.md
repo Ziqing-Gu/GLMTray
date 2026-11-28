@@ -2,13 +2,9 @@
 
 ## 1. 产品介绍 / About the product
 
-用 MIDI 控制器调节 Genelec 监听系统时，GLM 可以留在 Windows 后台。GLM Tray 会在识别到 GLM 主窗口约十秒后将它隐藏，让任务栏留给音频工作站。原有 MIDI 映射和音量控制仍由 GLM 处理。双击通知区域里的绿色监听音箱图标可以打开主窗口，退出助手也会恢复窗口。遇到设置或错误对话框时，助手会等你处理完再隐藏。
+GLM Tray 是 Genelec GLM 的窗口管理工具，可从 Windows 系统托盘或 macOS 菜单栏隐藏和恢复 GLM 窗口。窗口隐藏后，原版 GLM 继续运行，你仍可用 MIDI 控制器调节监听音量或静音。
 
-GLM Tray keeps the Genelec GLM main window in the Windows notification area while you work in your DAW. About ten seconds after the window appears, the helper hides it. GLM continues to handle your existing MIDI mappings and monitor levels. Double-click the green monitor icon in the tray to bring the window back, or exit the helper to restore it. If GLM opens a settings or error dialog, the helper waits until you finish with it.
-
-1.0.5 增加 macOS 菜单栏助手。首次选择原版 GLM 后，可以隐藏、显示并继续使用原有 MIDI 控制器。macOS 13 或更新版本支持 Apple 芯片和 Intel。同一版本提供 Windows x64 EXE 与 macOS 通用 PKG。原版 GLM 在 Mac 的程序坞中仍保留图标。
-
-Version 1.0.5 adds a native macOS menu bar helper for Apple silicon and Intel on macOS 13 or later. Select your installed Genelec GLM app, then hide or show it from the menu bar. The original GLM app retains its Dock icon. The Windows x64 installer and macOS Universal PKG share the same version.
+GLM Tray is a utility for hiding and restoring the Genelec GLM window from the Windows system tray or the macOS menu bar. GLM keeps running in the background, so you can still use your MIDI controller to adjust monitor volume or mute your monitors.
 
 本工具由 Qing Audio 独立提供。Genelec GLM 与监听硬件需另行安装、配置。 / An independent Qing Audio utility, unaffiliated with Genelec. Install and configure Genelec GLM and your monitoring hardware separately.
 
