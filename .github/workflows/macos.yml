@@ -1,0 +1,53 @@
+name: Build and test macOS
+on:
+  workflow_dispatch:
+  push:
+    branches: ['macos-*']
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build Universal 2 app and PKG
+        run: bash macos/build.sh "$RUNNER_TEMP/glm-output"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GLMTray-macOS-Universal
+          path: ${{ runner.temp }}/glm-output/*.pkg
+          if-no-files-found: error
+          retention-days: 14
+  verify:
+    needs: package
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: arm64
+          - runner: macos-15-intel
+            arch: x86_64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: GLMTray-macOS-Universal
+          path: ${{ runner.temp }}/glm-package
+      - name: Install and exercise the same PKG natively
+        run: |
+          test "$(uname -m)" = "${{ matrix.arch }}"
+          bash macos/tests/verify.sh "$RUNNER_TEMP"/glm-package/*.pkg "$RUNNER_TEMP/glm-verification"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GLMTray-verification-${{ matrix.arch }}
+          path: ${{ runner.temp }}/glm-verification/functional.json
+          if-no-files-found: error
+          retention-days: 14

@@ -27,7 +27,7 @@ namespace fs = std::filesystem;
 #pragma comment(lib, "gdi32.lib")
 #pragma comment(lib, "psapi.lib")
 
-constexpr wchar_t Version[] = L"1.0.4";
+constexpr wchar_t Version[] = L"1.0.5";
 constexpr wchar_t RunKey[] = L"Software\\Microsoft\\Windows\\CurrentVersion\\Run";
 constexpr UINT TrayMessage = WM_APP + 1, WindowEvent = WM_APP + 2;
 constexpr UINT IdShow = 1, IdHide = 2, IdExit = 3, IdStartup = 4, IdMinimize = 5, IdAbout = 6;
@@ -299,7 +299,7 @@ struct App {
             GetWindowThreadProcessId(target, &pid) && pid == targetPid;
     }
     void UpdateTray(bool add = false) {
-        std::wstring tip = L"GLM 托盘助手 1.0.4 · ";
+        std::wstring tip = L"GLM 托盘助手 1.0.5 · ";
         tip += !target ? L"等待 GLM" : IsWindowVisible(target) ? L"界面已显示" : L"已收进托盘";
         if (!add && tip == lastTip) return;
         NOTIFYICONDATAW data{}; data.cbSize = sizeof(data); data.hWnd = controller; data.uID = 1;
@@ -365,7 +365,7 @@ struct App {
         AppendMenuW(menu, MF_STRING | (hideOnMinimize ? MF_CHECKED : 0), IdMinimize, L"最小化时收进托盘");
         AppendMenuW(menu, MF_STRING | (StartupEnabled() ? MF_CHECKED : 0), IdStartup, L"登录 Windows 后启动助手");
         AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
-        AppendMenuW(menu, MF_STRING, IdAbout, L"关于 GLM 托盘助手 1.0.4");
+        AppendMenuW(menu, MF_STRING, IdAbout, L"关于 GLM 托盘助手 1.0.5");
         AppendMenuW(menu, MF_STRING, IdExit, L"退出助手并恢复 GLM");
         POINT point{}; GetCursorPos(&point); SetForegroundWindow(controller);
         UINT command = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_RIGHTBUTTON, point.x, point.y, 0, controller, nullptr);
@@ -383,7 +383,7 @@ struct App {
                 hideOnMinimize = !hideOnMinimize;
             else Balloon(L"此目录无法保存设置。请将助手放在可以写入的目录。");
         } else if (command == IdAbout) MessageBoxW(controller,
-            L"GLM 托盘助手 1.0.4\n\n双击托盘图标恢复 GLM，最小化时自动收起。\n退出助手会恢复 GLM 窗口。\n\n原生事件驱动，无后台定时轮询。", L"GLM 托盘助手", MB_OK);
+            L"GLM 托盘助手 1.0.5\n\n双击托盘图标恢复 GLM，最小化时自动收起。\n退出助手会恢复 GLM 窗口。\n\n原生事件驱动，无后台定时轮询。", L"GLM 托盘助手", MB_OK);
     }
     void OnEvent(DWORD event, HWND window) {
         if (!target) return;
@@ -473,7 +473,7 @@ bool WriteInspect(const wchar_t* output) {
     HWND window = FindMain(); DWORD pid{}; GetWindowThreadProcessId(window, &pid);
     FILE* file{};
     if (_wfopen_s(&file, output, L"w, ccs=UTF-8")) return false;
-    fwprintf(file, L"{\"version\":\"1.0.4\",\"hwnd\":%llu,\"pid\":%lu,\"visible\":%s,\"minimized\":%s,\"enabled\":%s}\n",
+    fwprintf(file, L"{\"version\":\"1.0.5\",\"hwnd\":%llu,\"pid\":%lu,\"visible\":%s,\"minimized\":%s,\"enabled\":%s}\n",
         static_cast<unsigned long long>(reinterpret_cast<UINT_PTR>(window)), pid,
         IsWindowVisible(window) ? L"true" : L"false", IsIconic(window) ? L"true" : L"false", IsWindowEnabled(window) ? L"true" : L"false");
     fclose(file); return true;
@@ -561,7 +561,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR, int) {
                 return !app->target;
             }, 0);
         }
-        Log(L"Native 1.0.4 started; no periodic polling");
+        Log(L"Native 1.0.5 started; no periodic polling");
         while (!state.quitting) {
             HANDLE handles[]{state.signals[0], state.signals[1], state.signals[2], state.process};
             DWORD count = state.process ? 4 : 3;

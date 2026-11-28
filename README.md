@@ -6,6 +6,10 @@
 
 GLM Tray keeps the Genelec GLM main window in the Windows notification area while you work in your DAW. About ten seconds after the window appears, the helper hides it. GLM continues to handle your existing MIDI mappings and monitor levels. Double-click the green monitor icon in the tray to bring the window back, or exit the helper to restore it. If GLM opens a settings or error dialog, the helper waits until you finish with it.
 
+1.0.5 增加 macOS 菜单栏助手。首次选择原版 GLM 后，可以隐藏、显示并继续使用原有 MIDI 控制器。macOS 13 或更新版本支持 Apple 芯片和 Intel。同一版本提供 Windows x64 EXE 与 macOS 通用 PKG。原版 GLM 在 Mac 的程序坞中仍保留图标。
+
+Version 1.0.5 adds a native macOS menu bar helper for Apple silicon and Intel on macOS 13 or later. Select your installed Genelec GLM app, then hide or show it from the menu bar. The original GLM app retains its Dock icon. The Windows x64 installer and macOS Universal PKG share the same version.
+
 本工具由 Qing Audio 独立提供。Genelec GLM 与监听硬件需另行安装、配置。 / An independent Qing Audio utility, unaffiliated with Genelec. Install and configure Genelec GLM and your monitoring hardware separately.
 
 ## 2. 许可证 / License
@@ -24,6 +28,8 @@ GLM Tray keeps the Genelec GLM main window in the Windows notification area whil
 
 ## 3. 最新版本下载与说明书 / Latest downloads and guides
 
+本分支的 1.0.5 正在进行跨平台试用。下表列出当前已公开的正式安装包。 / Version 1.0.5 is being tested on this branch. The table links to the current published release.
+
 **1.0.4 Stable · Windows x64 · 2026-11-21**（北京时间 / UTC+8）. [最新版 Release / Latest release](https://github.com/Ziqing-Gu/GLMTray/releases/latest)
 
 | 下载 / Download | 用途 / What to choose |
@@ -33,13 +39,18 @@ GLM Tray keeps the Genelec GLM main window in the Windows notification area whil
 | [中文安装与使用说明](https://github.com/Ziqing-Gu/GLMTray/releases/download/v1.0.4/Install-ZH.md) | 安装、便携运行、托盘操作、登录启动和卸载。 |
 | [English installation and user guide](https://github.com/Ziqing-Gu/GLMTray/releases/download/v1.0.4/Install-EN.md) | Installation, portable use, tray controls, sign-in and removal. |
 
-从旧版安装包升级时，直接运行新安装包即可。保留向导预选的文件夹会原位更新；点击浏览改选目录会迁移程序并卸载旧安装。安装器保留已启用的登录任务、设置和指向旧程序的开始菜单、桌面及桌面一级文件夹快捷方式。独立便携副本请在升级前手动退出。macOS 和 Linux 暂无成品。GitHub 的 “Source code (zip/tar.gz)” 是源码快照，Windows 安装请选择上表的 EXE。
+从旧版安装包升级时，直接运行新安装包即可。保留向导预选的文件夹会原位更新；点击浏览改选目录会迁移程序并卸载旧安装。安装器保留已启用的登录任务、设置和指向旧程序的开始菜单、桌面及桌面一级文件夹快捷方式。独立便携副本请在升级前手动退出。1.0.4 公开版仅提供 Windows 安装包。GitHub 的 “Source code (zip/tar.gz)” 是源码快照，Windows 安装请选择上表的 EXE。
 
-Run Setup to upgrade an installed copy. Keep the preselected folder to update in place, or browse to move the program and uninstall the previous copy. Setup carries over an enabled sign-in task, preferences and existing links to the helper in Start, on the desktop and in its immediate subfolders. Exit a separate portable instance before upgrading. No macOS or Linux build is available. GitHub's “Source code (zip/tar.gz)” files contain source snapshots. Choose the EXE above for installation.
+Run Setup to upgrade an installed copy. Keep the preselected folder to update in place, or browse to move the program and uninstall the previous copy. Setup carries over an enabled sign-in task, preferences and existing links to the helper in Start, on the desktop and in its immediate subfolders. Exit a separate portable instance before upgrading. The published 1.0.4 release provides a Windows installer only. GitHub's “Source code (zip/tar.gz)” files contain source snapshots. Choose the EXE above for installation.
 
 验证环境为 Windows x64 和 Genelec GLM 5.2.0。若 GLM 与 Cubase 或 Nuendo 在启动时争用设备，请先开 GLM。本次未遍历实体控制器的所有按键，也未验证其他 GLM 版本。 / Testing used Windows x64 and Genelec GLM 5.2.0. If GLM and Cubase or Nuendo compete for a device at startup, open GLM first. Testing did not cover every physical control or other GLM versions.
 
 ## 4. 逐版本更新记录 / Version history
+
+### 1.0.5 · 2026-11-28 · macOS 菜单栏助手 / macOS menu bar helper
+
+- 新增 macOS 13 及以上版本的菜单栏助手和通用 PKG，同时支持 Apple 芯片和 Intel。首次选定原版 GLM 后，可以隐藏、恢复窗口或选择登录启动。自动隐藏会等到 GLM 离开前台；原版程序的 Dock 图标保留。Windows 使用同版本安装包和双语说明，继续支持原位升级及快捷方式迁移。
+- Added a menu bar helper and Universal PKG for macOS 13 or later on Apple silicon and Intel. Select the installed Genelec GLM app once to hide or show it and optionally start the helper at login. Automatic hiding waits for GLM to leave the foreground. The original app keeps its Dock icon. Windows ships at the same version with the existing upgrade and shortcut migration behavior.
 
 ### 1.0.4 · 2026-11-21 · Stable · 安装与迁移 / Installation and upgrades
 

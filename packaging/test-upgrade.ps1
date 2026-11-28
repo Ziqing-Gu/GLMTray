@@ -77,10 +77,10 @@ foreach ($file in 'Install-ZH.md','Install-EN.md','GLMTray-Quick-Start.txt') {
     Copy-Item -LiteralPath (Join-Path $source "docs\$file") -Destination $qaPayload
 }
 Copy-Item -LiteralPath (Join-Path $source 'LICENSE') -Destination $qaPayload
-& $Compiler /Qp /DProductVersion=1.0.4 "/DProductFamily=$family" "/DPayloadDir=$qaPayload" "/DPackageDir=$newCompiled" (Join-Path $PSScriptRoot 'GLMTray.iss')
+& $Compiler /Qp /DProductVersion=1.0.5 "/DProductFamily=$family" "/DPayloadDir=$qaPayload" "/DPackageDir=$newCompiled" (Join-Path $PSScriptRoot 'GLMTray.iss')
 if ($LASTEXITCODE) { throw 'Current test installer compilation failed.' }
 $oldSetup = Join-Path $oldCompiled 'GLMTray-1.0.3-Windows-x64-Setup.exe'
-$newSetup = Join-Path $newCompiled 'GLMTray-1.0.4-Windows-x64-Setup.exe'
+$newSetup = Join-Path $newCompiled 'GLMTray-1.0.5-Windows-x64-Setup.exe'
 $oldExe = Join-Path $oldDir $exeName
 $newExe = Join-Path $newDir $exeName
 try {
@@ -101,7 +101,7 @@ try {
 
     Install $newSetup '02-keep-directory'
     $rows = @(Entries)
-    Check ($rows.Count -eq 1 -and $rows[0].DisplayVersion -eq '1.0.4' -and $rows[0].InstallLocation.TrimEnd('\') -eq $oldDir) 'Default upgrade reuses the selected legacy directory and its single uninstall record'
+    Check ($rows.Count -eq 1 -and $rows[0].DisplayVersion -eq '1.0.5' -and $rows[0].InstallLocation.TrimEnd('\') -eq $oldDir) 'Default upgrade reuses the selected legacy directory and its single uninstall record'
     Check ((Get-FileHash -LiteralPath $oldExe).Hash -eq (Get-FileHash -LiteralPath (Join-Path $qaPayload $exeName)).Hash) 'Updated helper payload verified'
     Check ($shell.CreateShortcut($startLink).TargetPath -eq $oldExe -and $shell.CreateShortcut($desktopLink).TargetPath -eq $oldExe) 'Existing shortcut paths survive an in-place upgrade'
     Check ([IO.File]::ReadAllText((Join-Path $oldDir 'GLMTray.ini')) -eq $ini) 'In-place preferences preserved'
@@ -116,7 +116,7 @@ try {
     Install $newSetup '04-relocate' ('/DIR="' + $newDir + '"')
     $rows = @(Entries)
     Check ($rows.Count -eq 1 -and $rows[0].InstallLocation.TrimEnd('\') -eq $newDir -and !(Test-Path -LiteralPath $oldExe)) 'Relocation uninstalls the old executable and entry after installing the new copy'
-    Check ((Get-Item -LiteralPath $newExe).VersionInfo.ProductVersion -eq '1.0.4' -and (Test-Path -LiteralPath (Join-Path $newDir 'GLMTray-Quick-Start.txt'))) 'New executable and quick guide installed'
+    Check ((Get-Item -LiteralPath $newExe).VersionInfo.ProductVersion -eq '1.0.5' -and (Test-Path -LiteralPath (Join-Path $newDir 'GLMTray-Quick-Start.txt'))) 'New executable and quick guide installed'
     Check ((Test-Path -LiteralPath $userFile) -and (Test-Path -LiteralPath (Join-Path $oldDir 'GLMTray.ini'))) 'Original user files retained'
     $newIni = [IO.File]::ReadAllText((Join-Path $newDir 'GLMTray.ini'))
     $absolute = [IO.Path]::GetFullPath((Join-Path $oldDir '..\custom\GLMv5.exe'))

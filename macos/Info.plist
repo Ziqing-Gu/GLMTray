@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key><string>en</string>
+  <key>CFBundleLocalizations</key><array><string>en</string><string>zh-Hans</string></array>
+  <key>CFBundleDisplayName</key><string>GLM Tray</string>
+  <key>CFBundleName</key><string>GLM Tray</string>
+  <key>CFBundleExecutable</key><string>GLMTray</string>
+  <key>CFBundleIdentifier</key><string>org.qingaudio.GLMTray</string>
+  <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleIconFile</key><string>GLMTray.icns</string>
+  <key>CFBundleShortVersionString</key><string>1.0.5</string>
+  <key>CFBundleVersion</key><string>1.0.5</string>
+  <key>LSMinimumSystemVersion</key><string>13.0</string>
+  <key>LSUIElement</key><true/>
+  <key>NSHighResolutionCapable</key><true/>
+  <key>NSHumanReadableCopyright</key><string>Copyright © Qing Audio</string>
+  <key>NSPrincipalClass</key><string>NSApplication</string>
+</dict>
+</plist>

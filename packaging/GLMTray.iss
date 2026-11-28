@@ -1,4 +1,4 @@
-; ISCC /DProductVersion=1.0.4 /DPayloadDir=... /DPackageDir=... GLMTray.iss
+; ISCC /DProductVersion=1.0.5 /DPayloadDir=... /DPackageDir=... GLMTray.iss
 #ifndef ProductVersion
   #error ProductVersion is required
 #endif
